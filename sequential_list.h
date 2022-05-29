@@ -124,3 +124,32 @@ bool ListDelete(SqList* &L, int i, ElemType e)
     return true;
 }
 
+/*---------------------------------------实际例题-----------------------------------------*/
+
+//设计一个算法，删除顺序表中所有值等于 x的元素，要求算法的时间复杂度为 O(n),空间复杂度为 O(1)
+//方法一：快慢指针（双指针）
+void delnode1(SqList* &L, ElemType x)
+{
+    int i, k=0; //k记录不等于 x的元素的个数，即要插入元素的个数
+    for (i = 0; i < L->length; i++)
+        if(L->data[i] != x)
+        {
+            L->data[i] = L->data[k];
+            k++;
+        }
+    L->length = k;
+}
+
+//方法二： 单指针
+void delnode2(SqList* &L, ElemType x)
+{
+    int i,k=0;  //k记录等于 x的元素的个数
+    for (i = 0; i < L->length; i++)
+    {
+        if(L->data[i] == x) //当前元素为 x时，k加 1
+            k++;
+        else
+            L->data[i-k] = L->data[i];  //当前元素不为 x时，元素向前移 k位
+    }
+    L->length = L->length -k;
+}
