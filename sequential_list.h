@@ -134,7 +134,7 @@ void delnode1(SqList* &L, ElemType x)
     for (i = 0; i < L->length; i++)
         if(L->data[i] != x)
         {
-            L->data[i] = L->data[k];
+            L->data[k] = L->data[i];
             k++;
         }
     L->length = k;
