@@ -153,3 +153,47 @@ void delnode2(SqList* &L, ElemType x)
     }
     L->length = L->length -k;
 }
+
+
+/*设计一个尽可能高效的算法，使顺序表第一个元素为基准，将所有小于等于它的元素移到该基准的前面，将所有
+大于它的元素移到基准的后面*/
+void swap(ElemType &a, ElemType &b)
+{
+    ElemType temp;
+    temp = a;
+    a = b;
+    b = temp; 
+}
+//方法一 swap
+void partition1(SqList* &L)
+{
+    int i = 0, j = L->length-1;
+    ElemType pivot = L->data[0];    //保存基准
+    while(i < j)    //从区间左右交替向中间扫描，直到 i=j
+    {
+        while(i < j && L->data[j] > pivot)  //从右向左扫描，找一个比基准小的数
+            j--;
+        while(i < j && L->data[i] <= pivot) //从左向右扫描，找一个比基准大的数
+            i++;
+        if(i < j)
+            swap(L->data[i],L->data[j]);
+    }
+    swap(L->data[0],L->data[i]);
+}
+
+//方法二 覆盖（交换次数更少）
+void partition2(SqList* &L)
+{
+    int i = 0, j = L->length-1;
+    ElemType pivot = L->data[0];    //保存基准
+    while(i < j)    //从区间左右交替向中间扫描，直到 i=j
+    {
+        while(i < j && L->data[j] > pivot)
+            j--;
+        L->data[i] = L->data[j];    //覆盖
+        while(i < j && L->data[i] >= pivot)
+            i++;
+        L->data[j] = L->data[i];    //覆盖
+    }
+    L->data[i] = pivot;
+}
