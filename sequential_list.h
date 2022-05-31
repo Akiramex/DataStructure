@@ -197,3 +197,32 @@ void partition2(SqList* &L)
     }
     L->data[i] = pivot;
 }
+
+//设计一个算法，将所有奇数移动到偶数的前面。
+//方法一 swap
+void move1(SqList* &L)
+{
+    int i = 0, j = L->length-1;
+    while(i < j)
+    {
+        while(i < j && L->data[j] %2 == 0)
+            j--;
+        while(i < j && L->data[i] %2 == 1)
+            i++;
+        if(i < j)
+            swap(L->data[i], L->data[j]);
+    }
+}
+
+//方法二 区间
+void move2(SqList* &L)
+{
+    int i = -1, j;  //i表示奇数区间的长度。
+    for (j = 0; i < L->length; j++) //循环至队尾
+        if(L->data[j] %2 == 1)  //j指向奇数时
+        {
+            i++;
+            if(i < j)//若 j大于 i
+                swap(L->data[i], L->data[j]);
+        }
+}
