@@ -31,6 +31,39 @@ typedef struct LNode {
 
 
 /*--------------------------------------创建单链表---------------------------------------*/
+//头插法    使用头插法建表时链表的元素顺序与 a顺序相反
+void CreateListF(LinkNode* &L, ElemType a[], int n)
+{
+    LinkNode* s;
+    L = (LinkNode*)malloc(sizeof(LinkNode));    //开辟到堆区
+    L->next = NULL; //创建头节点，next域置为空
+    for (int i = 0; i < n; i++) //循环创建节点 s
+    {
+        s = (LinkNode*)malloc(sizeof(LinkNode));
+        s->data =a[i];
+        s->next = L->next;
+        L->next = s;
+    }
+}
+
+//尾插法 链表与 a数组元素顺序相同
+void CreateListR(LinkNode* &L, ElemType a[], int n)
+{
+    LinkNode* s,* r;    
+    L = (LinkNode*)malloc(sizeof(LinkNode));
+    r = L;  //r指向尾节点,初始时指向头节点
+    for (int i = 0; i < n; i++)
+    {
+        s=(LinkNode*)malloc(sizeof(LinkNode));
+        s->data = a[i];
+        r->next = s;    //将 s节点插入到 r节点前
+        r = s;
+    }
+    r->next = NULL; //尾节点 next域置为空
+}
+
+
+/*---------------------------------单链表基本运算的实现------------------------------------*/
 //初始化单链表
 void InitList(LinkNode* &L)
 {
@@ -161,4 +194,3 @@ bool ListDelete(LinkNode* &L, int i, ElemType &e)
     }
 }
 
-/*---------------------------------单链表基本运算的实现------------------------------------*/
