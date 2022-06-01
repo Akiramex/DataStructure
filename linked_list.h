@@ -31,6 +31,134 @@ typedef struct LNode {
 
 
 /*--------------------------------------创建单链表---------------------------------------*/
+//初始化单链表
+void InitList(LinkNode* &L)
+{
+    L = (LinkNode*)malloc(sizeof(LinkNode));
+    L->next = NULL;
+}
 
+//销毁单链表
+void DestroyList(LinkNode* &L)
+{
+    LinkNode *pre, *p;
+    pre = L, p = L->next;   //pre指向头节点，p指向首节点
+    while(p != NULL)
+    {
+        free(pre);
+        pre = p;    //同步后移
+        p = pre->next;
+    }
+    free(pre);
+}
+
+//判断单链表是否为空表
+bool ListEmpty(LinkNode* L)
+{
+    return(L->next == NULL);
+}
+
+//求单链表的长度
+int LinkLength(LinkNode* L)
+{
+    int n = 0;
+    LinkNode* p = L;    //p指向头节点
+    while(p->next != NULL)  //循环至尾节点
+    {
+        p=p->next;
+        n++;
+    }
+    return n;
+}
+ 
+ //输出单链表
+ void DispLink(LinkNode* L)
+ {
+     LinkNode *p = L->next; //p指向首节点
+     while(p != NULL)
+     {
+         printf("%d ",p->data);
+         p=p->next;
+     }
+     printf("\n");
+ }
+
+ //求链表中的某个数据元素值
+ bool GetElem(LinkNode* L, int i, ElemType &e)
+ {
+     int j = 0; //j用于记录链表长度
+     LinkNode *p = L;
+     if(i <= 0) return false;   //合法性检查
+     while (p != NULL && j < i) //循环检索，直至 p到尾节点或者 j=i
+     {
+         j++;
+         p = p->next;
+     }
+     if(p == NULL) return false;
+     else   //j=i
+     {
+         e = p->data;
+         return true;
+     }
+ }
+
+ //按元素值查找
+ int LocateElem(LinkNode* L, ElemType e)
+ {
+     int i = 1;
+     LinkNode *p = L->next; //指向首节点
+     while(p != NULL && p->data != e)   //循环检索，直到链表尾 或者 找到元素
+     {
+         p = p->next;
+         i++;
+     }
+     if(p == NULL) return(0);   //不存在值为 e的节点，返回0
+     else return(i);    //存在值为 e的节点，返回逻辑序号 i3e
+ }
+
+ //插入数据元素
+ bool ListInsert(LinkNode* &L, int i, ElemType e)
+ {
+     int j = 0;
+     LinkNode *p = L, *s;
+     if(i <= 0) return false;   //合法性检查
+     while(p != NULL && j < i-1)  //循环检索，直至 p到尾节点或者 j=i-1
+     {
+         j++;
+         p=p->next;
+     }
+    if(p == NULL) return false;//未找到第 i-1个数据节点
+    else
+    {
+        s = (LinkNode*)malloc(sizeof(LinkNode));
+        s->data = e;
+        s ->next = p->next; //将节点 s插入到节点 p之后
+        p->next = s;
+        return true;
+    }
+}
+
+//删除数据元素
+bool ListDelete(LinkNode* &L, int i, ElemType &e)
+{
+    int j = 0;
+    LinkNode *p = L, *q;
+    if(i <= 0) return false;   //合法性检查
+    while (p != NULL && j < i-1)//循环检索，直至 p到尾节点或者 j=i-1
+    {
+        j++;
+        p = p->next;
+    }
+    if (p = NULL) return false; //未找到第 i-1个数据节点
+    else
+    {
+        q = p->next;    //q指向第 i给节点
+        if(q = NULL) return false;  //q节点不存在
+        e = q->data;
+        p->next = q->next;
+        free(q);
+        return true;
+    }
+}
 
 /*---------------------------------单链表基本运算的实现------------------------------------*/
