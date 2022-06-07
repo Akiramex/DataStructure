@@ -192,7 +192,7 @@ void partition2(SqList* &L)
         while(i < j && L->data[j] > pivot)
             j--;
         L->data[i] = L->data[j];    //覆盖
-        while(i < j && L->data[i] >= pivot)
+        while(i < j && L->data[i] <= pivot)
             i++;
         L->data[j] = L->data[i];    //覆盖
     }
