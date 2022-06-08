@@ -93,3 +93,131 @@ bool symmetry(ElemType str[])
         return true;    
     }
 }
+
+//中缀表达式 exp转后缀表达式 postexp 
+/*将自定数据类型 ElemType 设置为 char
+为了方便区分，后缀表达式每个数字串的后面加一个 '#'*/
+void trans(char *exp, char postexp[])
+{
+    char e;
+    SqStack* Optr;
+    int i = 0;
+    while(*exp != '\0') {   //读取字符
+        switch(*exp)    //用switch把读取到的某个字符分5种情况操作
+        {
+        case '(':   //当字符为 (
+            e = *exp;
+            Push(Optr,e);
+            exp++;
+            break;
+        case ')':   //当字符为 )
+            Pop(Optr,e);
+            while (e != '(')
+            {
+                postexp[i++] = e;
+                Pop(Optr,e);
+            }
+            exp++;
+            break;
+        case '+':   //当字符为 +或-
+        case '-':
+             while (!StackEmpty(Optr))
+             {  
+                 GetTop(Optr,e);
+                 if(e != '(') {
+                    postexp[i++] = e;
+                    Pop(Optr,e);
+                 } else 
+                    break;
+             }
+             Push(Optr,*exp);
+             exp++;
+             break;
+        case '/':   //当字符为 *或/
+        case '*':
+            while (!StackEmpty(Optr))
+            {
+                GetTop(Optr,e);
+                if(e == '*' || e == '/') {
+                    postexp[i++] = e;
+                    Pop(Optr,e);
+                } else 
+                    break;
+            }
+            Push(Optr,*exp);
+            exp++;
+            break;
+        default:    //当字符为数字
+            while (*exp >= '0' && *exp <= '0')
+            {
+                postexp[i++] = *exp;
+                exp++;
+            }
+            postexp[i++] = '#';
+        }
+    }
+    while (!StackEmpty(Optr))   //栈内元素全部出栈
+    {
+        Pop(Optr,e);
+        postexp[i++] = e;
+    }
+    postexp[i] = '\0';  //添加结束标识
+    DestoryStack(Optr);
+}
+
+//后缀表达式求值
+//将自定数据类型 ElemType 设置为 double
+double compvalue(char * postexp)
+{
+    double d, a, b, c, e;
+    SqStack* Opnd;  //定义操作数栈
+    InitStack(Opnd);
+    while (*postexp != '\0')
+    {
+        switch (*postexp)   
+        {
+        case '+':   //运算符操作都是出两，操作，入栈
+            Pop(Opnd,a);
+            Pop(Opnd,b);
+            c = a + b;  
+            Push(Opnd,c);
+            break;
+        case '-':
+            Pop(Opnd,a);
+            Pop(Opnd,b);
+            c = a - b;
+            Push(Opnd,c);
+            break;
+        case '*':
+            Pop(Opnd,a);
+            Pop(Opnd,b);
+            c = a * b;
+            Push(Opnd,c);
+            break;
+        case '/':
+            Pop(Opnd,a);
+            Pop(Opnd,b);
+            if (a != 0) {
+                c = b / a;
+                Push(Opnd,c);
+            } else {
+                printf("\n\t除零错误!\n");
+                exit(0);
+            }
+            break;
+        default:    //处理数字字符
+            d = 0;  //将连续的数字字符转换成对应的数值存放到 d中
+            while (*postexp >= 0 && *postexp <= 9)
+            {
+                d = 10 * d + *postexp - '0';    //char 转 int 
+                postexp++;
+            }
+            Push(Opnd,d);
+            break;
+        }
+        postexp++;
+    }
+    GetTop(Opnd,e); //获得栈顶元素（最终结果）
+    DestoryStack(Opnd);
+    return e;
+}
